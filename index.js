@@ -1,7 +1,8 @@
 const http = require("http");
 
 function main(req, res) {
-    res.end("hello!");
+    res.writeHead(200, {"Content-type": "text/html"});
+    res.end("<html><body>Hello HTML!</body></html>");
 }
 
 let srv = http.createServer(main);
