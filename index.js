@@ -13,6 +13,13 @@ function main(req, res) {
     } else if (req.url == "/style.css") {
         res.writeHead(200, {"Content-type": "text/css"});
         res.end(fs.readFileSync("style.css"));
+    } else if (req.url == "/test") {
+        res.writeHead(200, {"Content-type": "application/json"});
+        let obj = {};
+        obj.appname = "my first service";
+        obj.version = "0.0.0.1";
+        obj.srvtime = new Date().toLocaleTimeString();
+        res.end(JSON.stringify(obj));
     } else { //not found
         res.writeHead(404);
         res.end();
