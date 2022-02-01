@@ -4,6 +4,7 @@ const url = require("url");
 //...system modules
 
 const myservices = require("./services.js"); //module from my app
+const crud = require("./crud.js").crud; //function from my module
 
 function main(req, res) {
     console.log(req.url);
@@ -22,6 +23,8 @@ function main(req, res) {
         res.end(fs.readFileSync("mimon.png"));
     } else if (req.url.startsWith("/api/")) {
         myservices.services(req, res);
+    } else if (req.url.startsWith("/crud/")) {
+        crud(req, res);
     } else { //not found
         res.writeHead(404);
         res.end();
