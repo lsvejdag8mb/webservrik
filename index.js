@@ -13,6 +13,9 @@ function main(req, res) {
     } else if (req.url == "/style.css") {
         res.writeHead(200, {"Content-type": "text/css"});
         res.end(fs.readFileSync("style.css"));
+    } else if (req.url == "/favicon.ico") {
+        res.writeHead(200, {"Content-type": "image/png"});
+        res.end(fs.readFileSync("mimon.png"));
     } else if (req.url == "/test") {
         res.writeHead(200, {"Content-type": "application/json"});
         let obj = {};
