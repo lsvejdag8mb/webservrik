@@ -4,11 +4,13 @@ let items = [];
 
 exports.crud = function(req, res) {
   if (req.url.startsWith("/crud/create")) {
+    let params = url.parse(req.url, true).query;
     res.writeHead(200, { "Content-type": "application/json" });
     let newItem = {};
-    newItem.firstName = "Bob";
-    newItem.lastName = "Bobik";
-    newItem.yob = 2000;
+    // napr. /crud/create?firstname=Test&lastname=Testicek&yob=2002
+    newItem.firstName = params.firstname;
+    newItem.lastName = params.lastname;
+    newItem.yob = params.yob;
     items.push(newItem);
 
     let obj = {};
