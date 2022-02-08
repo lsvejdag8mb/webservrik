@@ -32,6 +32,26 @@ exports.crud = function(req, res) {
     let obj = {};
     obj.items = items;
     res.end(JSON.stringify(obj));
+  } else if (req.url.startsWith("/crud/update")) {
+    res.writeHead(200, { "Content-type": "application/json" });
+
+    let obj = {};
+    obj.status = "error";
+    obj.error = "item not found";
+    for (let i=0; i<items.length; i++) {
+      if (items[i].id == params.id) {
+        items[i].firstName = params.firstname;
+        items[i].lastName = params.lastname;
+        items[i].yob = params.yob;
+
+        fs.writeFileSync(FILE_ITEMS, JSON.stringify(items));
+        obj.status = "ok";
+        obj.error = undefined;
+        break;
+      }
+    }
+
+    res.end(JSON.stringify(obj));
   } else if (req.url.startsWith("/crud/delete")) {
     res.writeHead(200, { "Content-type": "application/json" });
 
