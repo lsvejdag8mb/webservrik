@@ -1,6 +1,11 @@
 const url = require("url"); 
+const fs = require("fs");
 
+const FILE_ITEMS = "cruditems.json";
 let items = [];
+if (fs.existsSync(FILE_ITEMS)) {
+  items = JSON.parse(fs.readFileSync(FILE_ITEMS));
+}
 
 exports.crud = function(req, res) {
   if (req.url.startsWith("/crud/create")) {
@@ -12,6 +17,8 @@ exports.crud = function(req, res) {
     newItem.lastName = params.lastname;
     newItem.yob = params.yob;
     items.push(newItem);
+
+    fs.writeFileSync(FILE_ITEMS, JSON.stringify(items));
 
     let obj = {};
     obj.status = "ok";
