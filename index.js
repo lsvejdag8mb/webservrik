@@ -5,6 +5,7 @@ const url = require("url");
 
 const myservices = require("./services.js"); //module from my app
 const crud = require("./crud.js").crudPOST; //function from my module
+const users = require("./users.js").usersPOST; //function from my module
 
 function main(req, res) {
     console.log(req.url);
@@ -25,6 +26,8 @@ function main(req, res) {
         myservices.services(req, res);
     } else if (req.url.startsWith("/crud/")) {
         crud(req, res);
+    } else if (req.url.startsWith("/users/")) {
+        users(req, res);
     } else { //not found
         res.writeHead(404);
         res.end();
