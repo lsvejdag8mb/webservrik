@@ -7,9 +7,7 @@ if (fs.existsSync(FILE_ITEMS)) {
   items = JSON.parse(fs.readFileSync(FILE_ITEMS));
 }
 
-exports.crud = function(req, res) {
-  let params = url.parse(req.url, true).query;
-
+function crud(req, res, params) {
   if (req.url.startsWith("/crud/create")) {
     res.writeHead(200, { "Content-type": "application/json" });
     let newItem = {};
@@ -74,3 +72,27 @@ exports.crud = function(req, res) {
     res.end();
   }
 }
+
+exports.crudPOST = function(req, res) {
+  let data = "";
+  req.on('data', function (chunk) {
+    data += chunk;
+  })
+  req.on('end', function () {
+    let obj = {};
+    if (data) {
+      let params = JSON.parse(data);
+      console.log(params);
+      
+      crud(req, res, params); 
+      
+    } else {
+      obj.status = "error";
+      obj.error = "no data";
+      res.writeHead(200, {"Content-type": "application/json"});
+      res.end(JSON.stringify(obj));
+    }
+  });
+
+}
+

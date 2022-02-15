@@ -4,7 +4,7 @@ const url = require("url");
 //...system modules
 
 const myservices = require("./services.js"); //module from my app
-const crud = require("./crud.js").crud; //function from my module
+const crud = require("./crud.js").crudPOST; //function from my module
 
 function main(req, res) {
     console.log(req.url);
