@@ -1,5 +1,11 @@
 const url = require("url"); 
 const fs = require("fs");
+const crypto = require('crypto');
+
+function hashPassword(password) {
+  let pw2hash = password + "@G8MB7#";
+  return crypto.createHash("sha256").update(pw2hash).digest('hex');
+}
 
 const FILE_USERS = "users.json";
 let items = [];
@@ -10,12 +16,24 @@ if (fs.existsSync(FILE_USERS)) {
 function users(req, res, params) {
   if (req.url.startsWith("/users/registry")) {
     res.writeHead(200, { "Content-type": "application/json" });
+
+    //kontrola existence
+    for (let item of items) {
+      if (item.username == params.username) {
+        let obj = {};
+        obj.status = "error";
+        obj.error = "username already exists";
+        res.end(JSON.stringify(obj));
+        return;
+      }
+    }
+    
     let newItem = {};
     // napr. /crud/create?firstname=Test&lastname=Testicek&yob=2002
     newItem.id = Date.now();
     newItem.username = params.username;
     newItem.fullname = params.fullname;
-    newItem.password = params.password;
+    newItem.password = hashPassword(params.password);
     newItem.email = params.email;
     items.push(newItem);
 
