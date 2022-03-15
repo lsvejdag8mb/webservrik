@@ -1,6 +1,8 @@
 const url = require("url"); 
 const fs = require("fs");
 
+const isTokenValid = require("./users.js").isTokenValid;
+
 const FILE_ITEMS = "cruditems.json";
 let items = [];
 if (fs.existsSync(FILE_ITEMS)) {
@@ -8,6 +10,8 @@ if (fs.existsSync(FILE_ITEMS)) {
 }
 
 function crud(req, res, params) {
+  //TODO overeni tokenu
+  
   if (req.url.startsWith("/crud/create")) {
     res.writeHead(200, { "Content-type": "application/json" });
     let newItem = {};

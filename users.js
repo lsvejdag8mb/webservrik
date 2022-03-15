@@ -47,9 +47,26 @@ function users(req, res, params) {
   } else if (req.url.startsWith("/users/login")) {
     res.writeHead(200, { "Content-type": "application/json" });
     let obj = {};
-    //TODO
-    //obj.items = items;
+    //kontrola shody username a hashe hesla
+    for (let item of items) {
+      if (item.username == params.username && 
+          item.password == hashPassword(params.password)) {
+        item.token = crypto.randomBytes(16).toString('hex');
+        item.tokenValidTo = Date.now() + 5*60000; //5 minut
+        
+        obj.status = "ok";
+        obj.id = item.id;
+        obj.token = item.token;
+        obj.fullname = item.fullname;
+        res.end(JSON.stringify(obj));
+        return;
+      }
+    }
+
+    obj.status = "error";
+    obj.error = "invalid username or password";
     res.end(JSON.stringify(obj));
+    
   } else if (req.url.startsWith("/users/logout")) {
     res.writeHead(200, { "Content-type": "application/json" });
     let obj = {};
@@ -85,3 +102,11 @@ exports.usersPOST = function(req, res) {
 
 }
 
+exports.isTokenValid = function(token) {
+  for (let item of items) {
+    if (item.token && item.token == token && item.tokenValidTo <= Date.now()) {
+      return true;
+    }
+  }
+  return false;
+}  
