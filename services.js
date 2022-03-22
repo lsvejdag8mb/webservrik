@@ -1,7 +1,19 @@
 const url = require("url"); 
+const isTokenValid = require("./users.js").isTokenValid;
 
 exports.services = function(req, res) {
-  if (req.url == "/api/test") {
+  let params = url.parse(req.url, true).query;
+  //verify logged user
+  if (!isTokenValid(params.token)) {
+    let obj = {};
+    obj.status = "error";
+    obj.error = "User not valid";
+    res.end(JSON.stringify(obj));
+    return;
+  }
+
+  
+  if (req.url.startsWith("/api/test")) {
     res.writeHead(200, { "Content-type": "application/json" });
     let obj = {};
     obj.appname = "my first service";
@@ -9,7 +21,6 @@ exports.services = function(req, res) {
     obj.srvtime = new Date().toLocaleTimeString();
     res.end(JSON.stringify(obj));
   } else if (req.url.startsWith("/api/add")) {
-    let params = url.parse(req.url, true).query;
     console.log(params.num1);
     console.log(params.num2);
     res.writeHead(200, { "Content-type": "application/json" });

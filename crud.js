@@ -87,8 +87,16 @@ exports.crudPOST = function(req, res) {
     if (data) {
       let params = JSON.parse(data);
       console.log(params);
-      
-      crud(req, res, params); 
+
+      //verify logged user
+      if (isTokenValid(params.token)) {
+        crud(req, res, params);       
+      } else {  
+        obj.status = "error";
+        obj.error = "User not valid";
+        res.writeHead(200, {"Content-type": "application/json"});
+        res.end(JSON.stringify(obj));
+      }
       
     } else {
       obj.status = "error";

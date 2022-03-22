@@ -70,8 +70,13 @@ function users(req, res, params) {
   } else if (req.url.startsWith("/users/logout")) {
     res.writeHead(200, { "Content-type": "application/json" });
     let obj = {};
-    //TODO
-    //obj.items = items;
+    for (let item of items) {
+      if (item.token && item.token == params.token) {
+        item.token = undefined;
+        item.tokenValidTo = undefined;
+      }
+    }
+    obj.status = "ok";
     res.end(JSON.stringify(obj));
   } else { //not found
     res.writeHead(404);
@@ -104,7 +109,9 @@ exports.usersPOST = function(req, res) {
 
 exports.isTokenValid = function(token) {
   for (let item of items) {
-    if (item.token && item.token == token && item.tokenValidTo <= Date.now()) {
+    console.log(item.token)
+    if (item.token && item.token == token && item.tokenValidTo >= Date.now()) {
+      item.tokenValidTo = Date.now() + 5*60000; //dalsich 5 minut je token platny
       return true;
     }
   }
